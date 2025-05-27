@@ -1,11 +1,12 @@
-// prisma/schema.prisma - VERSI LENGKAP
+// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"  // ← TAMBAHKAN INI UNTUK RAILWAY
 }
 
 model User {

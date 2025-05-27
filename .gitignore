@@ -40,13 +40,27 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# 1. Buat .gitignore
-echo "node_modules
-.env.local
+echo "# Dependencies
+node_modules/
+
+# Environment variables
 .env
-.next
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Next.js
+.next/
+out/
+
+# Vercel
+.vercel/
+
+# Database
+*.db
+*.sqlite
+
+# Logs
+*.log" > .gitignore
 .vercel
-dist
-build
-*.log
-*.tgz" > .gitignore
