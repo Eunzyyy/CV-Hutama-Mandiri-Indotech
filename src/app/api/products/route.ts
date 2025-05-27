@@ -1,4 +1,4 @@
-// src/app/api/products/route.ts - FIXED untuk frontend yang ada
+// src/app/api/products/route.ts - FIXED VERSION
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       where.OR = [
-        { name: { contains: search } },
+        { name: { contains: search } }, // Remove mode: insensitive for MySQL
         { description: { contains: search } },
       ];
     }
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
             name: true,
           },
         },
-        images: {
+        images: { // Pastikan nama relasi sesuai schema
           select: {
             id: true,
             url: true,
@@ -61,11 +61,10 @@ export async function GET(request: NextRequest) {
       orderBy,
     });
 
-    // RETURN ARRAY LANGSUNG seperti yang diharapkan frontend
     return NextResponse.json(products);
     
   } catch (error) {
     console.error("Error fetching products:", error);
-    return NextResponse.json([]);
+    return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
   }
 }
