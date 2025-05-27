@@ -1,12 +1,12 @@
-// prisma/schema.prisma
+// prisma/schema.prisma - FIXED VERSION
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"  // ← TAMBAHKAN INI UNTUK RAILWAY
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  // relationMode = "prisma"  // ← HAPUS INI - hanya untuk PlanetScale, bukan Railway
 }
 
 model User {
@@ -105,10 +105,10 @@ model Product {
   publicId    String   @unique @default(cuid())
   name        String
   description String
-  price       Float
+  price       Int      // ← UBAH dari Float ke Int (sesuai database)
   stock       Int
   sku         String?
-  weight      Float?
+  weight      Int?     // ← UBAH dari Float ke Int (sesuai database)
   categoryId  Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -135,7 +135,7 @@ model Service {
   publicId    String   @unique @default(cuid())
   name        String
   description String
-  price       Float
+  price       Int      // ← UBAH dari Float ke Int
   categoryId  Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -186,7 +186,7 @@ model Order {
   id              Int           @id @default(autoincrement())
   orderNumber     String        @unique
   userId          Int
-  totalAmount     Float
+  totalAmount     Int           // ← UBAH dari Float ke Int
   status          OrderStatus   @default(PENDING)
   paymentMethod   PaymentMethod?
   shippingAddress String?
@@ -202,12 +202,12 @@ model Order {
 }
 
 model OrderItem {
-  id        Int   @id @default(autoincrement())
+  id        Int @id @default(autoincrement())
   orderId   Int
   productId Int?
   serviceId Int?
   quantity  Int
-  price     Float
+  price     Int // ← UBAH dari Float ke Int
 
   order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product Product? @relation(fields: [productId], references: [id])
@@ -219,16 +219,16 @@ model OrderItem {
 model Payment {
   id              Int           @id @default(autoincrement())
   orderId         Int
-  amount          Float
+  amount          Int           // ← UBAH dari Float ke Int
   method          PaymentMethod
   status          PaymentStatus @default(PENDING)
-  transactionId   String?       // ID dari payment gateway
-  paymentProof    String?       // URL bukti pembayaran
-  proofFileName   String?       // Nama file bukti pembayaran
+  transactionId   String?
+  paymentProof    String?
+  proofFileName   String?
   notes           String?
   paidAt          DateTime?
-  verifiedAt      DateTime?     // Tanggal verifikasi admin
-  verifiedBy      Int?          // User ID yang verifikasi
+  verifiedAt      DateTime?
+  verifiedBy      Int?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -254,7 +254,7 @@ model Review {
   userId    Int
   productId Int?
   serviceId Int?
-  rating    Int      // 1-5
+  rating    Int
   comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -279,11 +279,11 @@ enum NotificationType {
 
 model Notification {
   id        Int              @id @default(autoincrement())
-  userId    Int?             // null = untuk semua admin
+  userId    Int?
   type      NotificationType
   title     String
   message   String
-  data      Json?            // data tambahan (orderId, etc)
+  data      Json?
   isRead    Boolean          @default(false)
   createdAt DateTime         @default(now())
 
