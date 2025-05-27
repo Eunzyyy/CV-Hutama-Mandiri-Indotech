@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 1. Buat .gitignore
+echo "node_modules
+.env.local
+.env
+.next
+.vercel
+dist
+build
+*.log
+*.tgz" > .gitignore
